@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mis álbumes - FotoÁlbum</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <nav class="navbar navbar-dark bg-dark px-3">
+    <span class="navbar-brand">📸 FotoÁlbum · Admin</span>
+    <a href="/logout" class="btn btn-outline-light btn-sm">Cerrar sesión</a>
+  </nav>
+
+  <div class="container py-4">
+    <div class="card mb-4 shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">Crear nuevo álbum</h5>
+        <form method="POST" action="/admin/albums" class="d-flex gap-2">
+          <input type="text" name="name" class="form-control" placeholder="Ej: Viaje a Asturias, Cumpleaños de Ana..." required>
+          <button type="submit" class="btn btn-dark">Crear</button>
+        </form>
+      </div>
+    </div>
+
+    <h5 class="mb-3">Tus álbumes (<%= albums.length %>)</h5>
+
+    <% if (albums.length === 0) { %>
+      <p class="text-muted">Aún no has creado ningún álbum.</p>
+    <% } %>
+
+    <div class="row g-3">
+      <% albums.forEach(album => { %>
+        <div class="col-md-4">
+          <div class="card album-card shadow-sm h-100">
+            <div class="card-body">
+              <h6 class="card-title"><%= album.name %></h6>
+              <p class="text-muted small mb-1"><%= album.image_count %> foto(s)</p>
+              <p class="text-muted small mb-3">Creado: <%= new Date(album.created_at).toLocaleDateString('es-ES') %></p>
+              <div class="d-flex gap-2 flex-wrap">
+                <a href="/admin/albums/<%= album.id %>" class="btn btn-sm btn-dark">Gestionar</a>
+                <a href="/album/<%= album.code %>" target="_blank" class="btn btn-sm btn-outline-secondary">Ver galería</a>
+                <form method="POST" action="/admin/albums/<%= album.id %>/delete" onsubmit="return confirm('¿Eliminar este álbum y todas sus fotos? Esta acción no se puede deshacer.')">
+                  <button type="submit" class="btn btn-sm btn-outline-danger">Eliminar</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+</body>
+</html>
